@@ -17,6 +17,5 @@ public class launch extends AppCompatActivity {
     public void toSignIn(View view) {
     Intent intent = new Intent(this, MainActivity.class);
     startActivity(intent);
-
     }
 }

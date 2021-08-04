@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/home_icon"
+        android:id="@+id/firstFragment"
+        android:title="Home"/>
+    <item
+        android:icon="@drawable/favourite"
+        android:id="@+id/secondFragment"
+        android:title="Favourites"/>
+    <item
+        android:icon="@drawable/playlist"
+        android:id="@+id/thirdFragment"
+        android:title="Playlist"/>
+</menu>
