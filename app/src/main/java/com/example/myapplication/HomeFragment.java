@@ -61,28 +61,24 @@ public class HomeFragment extends Fragment {
     public RecyclerView recycler;
     public homeAdapter homeAdapter;
     public ArrayList<Song> songs = new ArrayList<Song>();
+    public ImageButton btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        for (Song i:songCollection.getSongs()) songs.add(i);
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        homeAdapter = new homeAdapter(songs);
+        homeAdapter = new homeAdapter(songCollection.getSongs());
         recycler = v.findViewById(R.id.homRecycler);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(homeAdapter);
+//        Log.d("msg", "" + v.findViewWithTag("S1001"));
+//        Log.d("msg", "" + v.findViewById((int)homeAdapter.getItemId(0)));
         return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        for (Song i:favList) {
-            int btnId = getResources().getIdentifier(i.getId(), "id", getContext().getPackageName());
-            ImageButton btn = view.findViewById(btnId);
-            btn.setContentDescription("On");
-//            btn.setImageDrawable(getResources().getDrawable(R.drawable.favourite_on));
-        };
     }
 }

@@ -22,72 +22,80 @@ import static com.example.myapplication.MainActivity.gson;
 import static com.example.myapplication.MainActivity.songCollection;
 import static com.example.myapplication.MainActivity.sp;
 
-public class homeAdapter extends RecyclerView.Adapter<homeView> {
-    List<Song> songs;
+public class homeAdapter extends RecyclerView.Adapter<favView> {
+    Song[] songs;
 
-    public homeAdapter(List<Song> songs) {this.songs = songs;}
+    public homeAdapter(Song[] songs) {this.songs = songs;}
     Context context;
+    Song song;
 
     @NonNull
     @Override
-    public homeView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public favView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View songView = inflater.inflate(R.layout.item_favourites, parent, false);
-        homeView viewHolder = new homeView(songView);
+        favView viewHolder = new favView(songView);
         return viewHolder;
     }
     public Drawable favourites, favouritesOn;
 
     @Override
-    public void onBindViewHolder(@NonNull homeView holder, int position) {
-        Song song = songs.get(position);
+    public void onBindViewHolder(@NonNull favView holder, int position) {
+        song = songs[position];
+//        Log.d("msg", song.getTitle() + position);
         TextView artist = holder.songArtist;
         TextView title = holder.songTitle;
         ImageButton image = holder.songImg;
         artist.setText(song.getArtiste());
         title.setText(song.getTitle());
         image.setImageResource(song.getDrawable());
+        image.setTag(position);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), PlaySongActivity.class);
-                intent.putExtra("index", position);
+                intent.putExtra("index", (int) v.getTag());
                 context.startActivity(intent);
             }
         });
-        holder.favBtn.setTag(song.getId());
-        holder.favBtn.setOnClickListener(new View.OnClickListener () {
+        ImageButton btn = holder.favBtn;
+        btn.setImageDrawable(context.getResources().getDrawable(R.drawable.favourite));
+        btn.setContentDescription("Off");
+        btn.setTag(song.getId());
+        for (Song i:favList) {
+            if (i.getTitle().equals(song.getTitle())) {
+                btn.setContentDescription("On");
+                btn.setImageDrawable(context.getResources().getDrawable(R.drawable.favourite_on));
+            }
+        }
+        btn.setOnClickListener(new View.OnClickListener () {
             public void onClick (View v) {
                 favourites = v.getResources().getDrawable(R.drawable.favourite);
-                ImageButton btn = (ImageButton) v;
-                Song song  = songCollection.getCurrentSong(position);
-                Log.d("msg", v.getTag().toString());
-//                if (v.getContentDescription().equals("On")) {
-//                    btn.setImageDrawable(favourites);
-//                    v.setContentDescription("Off");
-////                    String id = v.getResources().getResourceName(v.getId());
-////                    Log.d("msg", "" + songCollection.searchSongById(id));
-////            Song targetSong = songCollection.getCurrentSong(songCollection.searchSongById(id));
-////            favList.remove(targetSong);
-//                    String json = gson.toJson(favList);
-//                    SharedPreferences.Editor editor = sp.edit();
-//                    editor.putString("list", json);
-//                    editor.apply();
-//                }
-//                else {
-//                    btn.setImageDrawable(favouritesOn);
-//                    v.setContentDescription("On");
-//                    favList.add(song);
-//                    String json = gson.toJson(favList);
-//                    SharedPreferences.Editor editor = sp.edit();
-//                    editor.putString("list", json);
-//                    editor.apply();
-//                }
+                favouritesOn = v.getResources().getDrawable(R.drawable.favourite_on);
+//                Log.d("msg", (String) v.getTag());
+                if (v.getContentDescription().equals("On")) {
+                    btn.setImageDrawable(favourites);
+                    v.setContentDescription("Off");
+                    favList.remove(songCollection.getCurrentSong(songCollection.searchSongById((String) v.getTag())));
+                    String json = gson.toJson(favList);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("list", json);
+                    editor.apply();
+                }
+                else {
+                    btn.setImageDrawable(favouritesOn);
+                    v.setContentDescription("On");
+                    favList.add(songCollection.getCurrentSong(songCollection.searchSongById((String) v.getTag())));
+                    String json = gson.toJson(favList);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("list", json);
+                    editor.apply();
+                }
             }
         });
     }
 
     @Override
-    public int getItemCount() {return songs.size();}
+    public int getItemCount() {return songs.length;}
 }

@@ -11,8 +11,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication.NoActionBar">
+        <activity android:name=".AddActivity"></activity>
+        <activity android:name=".PlaylistActivity" />
         <activity android:name=".FavActivity" />
-        <activity android:name=".MainActivity2" />
         <activity android:name=".launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

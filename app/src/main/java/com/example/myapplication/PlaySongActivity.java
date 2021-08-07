@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static com.example.myapplication.MainActivity.playlistList;
 
 public class PlaySongActivity extends AppCompatActivity {
     private String title, artiste, fileLink;
@@ -33,9 +34,10 @@ public class PlaySongActivity extends AppCompatActivity {
     private Boolean repeatBool = false, shuffleBool = false;
     private Drawable play, pause;
     private TextView totalTime, timeElapsed, titleView;
+    private ArrayList<Integer> shuffledOrder = new ArrayList<Integer>();
+    private ArrayList<Song> queue = new ArrayList<Song>();
     SeekBar seekbar;
     Handler handler = new Handler();
-    ArrayList<Integer> shuffledOrder = new ArrayList<Integer>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +53,23 @@ public class PlaySongActivity extends AppCompatActivity {
         btnPlayPause = findViewById(R.id.btnPlayPause);
         Bundle songData = this.getIntent().getExtras();
         currentIndex = songData.getInt("index");
-        displaySongBasedOnIndex(currentIndex);
+        if (currentIndex == -1) {
+            queue = playlistList.get(songData.getInt("playlist")).songs();
+            currentIndex = songData.getInt("playlistIndex");
+            displaySongBasedOnSong(queue.get(currentIndex));
+        }
+        else {
+            for (Song i:songCollection.getSongs()) queue.add(i);
+            displaySongBasedOnIndex(currentIndex);
+        }
         playSong(fileLink);
+
         seekbar.setMax(player.getDuration());
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 player.seekTo(seekBar.getProgress());
@@ -119,10 +129,8 @@ public class PlaySongActivity extends AppCompatActivity {
             }
         }
         else {
-            if (currentIndex < songCollection.getLength() - 1) currentIndex++;
-//        currentIndex = songCollection.getNextSong(currentIndex);
-//            Log.d("msg", "" + currentIndex);
-            displaySongBasedOnIndex(currentIndex);
+            if (currentIndex < queue.size() - 1) currentIndex++;
+            displaySongBasedOnSong(queue.get(currentIndex));
             playSong(fileLink);
             repeatBtn.setBackgroundResource(R.drawable.repeat);
             repeatBool = false;
@@ -141,7 +149,7 @@ public class PlaySongActivity extends AppCompatActivity {
             }
             else {
                 if (currentIndex != 0) currentIndex--;
-                displaySongBasedOnIndex(currentIndex);
+                displaySongBasedOnSong(queue.get(currentIndex));
                 playSong(fileLink);
                 shuffleBtn.setImageDrawable(getResources().getDrawable(R.drawable.shuffle));
                 repeatBtn.setBackgroundResource(R.drawable.repeat);
@@ -164,6 +172,19 @@ public class PlaySongActivity extends AppCompatActivity {
         iCoverArt.setImageResource(drawable);
     }
 
+    private void displaySongBasedOnSong (Song song) {
+        title = song.getTitle();
+        artiste = song.getArtiste();
+        fileLink = song.getFileLink();
+        drawable = song.getDrawable();
+        TextView txtTitle = findViewById(R.id.txtSongTitle);
+        txtTitle.setText(title);
+        TextView txtArtist = findViewById(R.id.txtArtist);
+        txtArtist.setText(artiste);
+        ImageView iCoverArt = findViewById(R.id.imgCoverArt);
+        iCoverArt.setImageResource(drawable);
+    }
+
     private void gracefullyStop() {
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -173,6 +194,7 @@ public class PlaySongActivity extends AppCompatActivity {
                 }
                 else {
                     btnPlayPause.setBackground(play);
+                    playNext(null);
                 }
             }
         });
@@ -235,6 +257,7 @@ public class PlaySongActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         handler.removeCallbacks(pBar);
+        handler.removeCallbacks(getTime);
         player.release();
     }
 }

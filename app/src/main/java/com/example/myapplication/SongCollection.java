@@ -27,7 +27,7 @@ public class SongCollection {
         Song YouTubeCypherVol2 = new Song("S1010", "YouTube Cypher, Vol. 2", "Crypt",
                 "https://p.scdn.co/mp3-preview/347429de44f7de56180d4cd39a7d4e3a5371cfa6?cid=2afe87a64b0042dabf51f37318616965", 12.32, R.drawable.youtube2);
         Song YouTubeCypherVol3 = new Song("S1011", "YouTube Cypher, Vol. 3", "Crypt",
-                "https://p.scdn.co/mp3-preview/0b6da17f858f104337fac626c4bac972d3947564?cid=2afe87a64b0042dabf51f37318616965", 	12.68, R.drawable.youtube3);
+                "https://p.scdn.co/mp3-preview/63c610acf46ddbd7c5285add04f057d3314eb4be?cid=2afe87a64b0042dabf51f37318616965", 	12.68, R.drawable.youtube3);
         Song Red = new Song("S1012", "Red (Uchiha Rap)", "Rustage",
                 "https://p.scdn.co/mp3-preview/7789b1beaae5f02f804143ef8bffdf0b471feef1?cid=2afe87a64b0042dabf51f37318616965", 3.03, R.drawable.red);
         Song Awake = new Song("S1013", "Awake (Boruto Rap)", "Rustage",
