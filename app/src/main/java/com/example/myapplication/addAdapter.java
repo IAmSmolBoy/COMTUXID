@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 import static com.example.myapplication.MainActivity.favList;
 import static com.example.myapplication.MainActivity.gson;
@@ -19,12 +23,12 @@ import static com.example.myapplication.MainActivity.songCollection;
 import static com.example.myapplication.MainActivity.sp;
 import static com.example.myapplication.MainActivity.spPlaylist;
 
-public class addAdapter extends RecyclerView.Adapter<favView> {
-    Song[] songs;
+public class addAdapter extends RecyclerView.Adapter<favView>{
+    public ArrayList<Song> songs = new ArrayList<Song>();
     Playlist playlist;
     public addAdapter(Song[] songs, int playlist) {
-        this.songs = songs;
         this.playlist = playlistList.get(playlist);
+        for (Song i:songs) this.songs.add(i);
     }
 
     Context context;
@@ -35,13 +39,12 @@ public class addAdapter extends RecyclerView.Adapter<favView> {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View songView = inflater.inflate(R.layout.item_favourites, parent, false);
-        favView viewHolder = new favView(songView);
-        return viewHolder;
+        return new favView(songView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull favView holder, int position) {
-        song = songs[position];
+        song = songs.get(position);
         TextView artist = holder.songArtist;
         TextView title = holder.songTitle;
         ImageButton image = holder.songImg;
@@ -71,5 +74,6 @@ public class addAdapter extends RecyclerView.Adapter<favView> {
     }
 
     @Override
-    public int getItemCount() {return songs.length;}
+    public int getItemCount() {return songs.size();}
+
 }

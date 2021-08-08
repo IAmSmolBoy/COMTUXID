@@ -73,10 +73,7 @@ public class PlaySongActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 player.seekTo(seekBar.getProgress());
-                int elapsed = player.getCurrentPosition();
-                int duration = player.getDuration();
-                timeElapsed.setText(elapsed / 1000 / 60 + ":" + elapsed / 1000 % 60);
-                totalTime.setText(duration / 1000 / 60 + ":" + duration / 1000 % 60);
+                Time();
             }
         });
     }
@@ -91,13 +88,18 @@ public class PlaySongActivity extends AppCompatActivity {
         }
     };
 
+
+    public void Time() {
+        int elapsed = player.getCurrentPosition();
+        int duration = player.getDuration();
+        timeElapsed.setText(elapsed / 1000 / 60 + ":" + elapsed / 1000 % 60);
+        totalTime.setText(duration / 1000 / 60 + ":" + duration / 1000 % 60);
+    }
+
     Runnable getTime = new Runnable() {
         @Override
         public void run() {
-            int elapsed = player.getCurrentPosition();
-            int duration = player.getDuration();
-            timeElapsed.setText(elapsed / 1000 / 60 + ":" + elapsed / 1000 % 60);
-            totalTime.setText(duration / 1000 / 60 + ":" + duration / 1000 % 60);
+            Time();
             handler.postDelayed(this, 1000);
         }
     };
@@ -237,10 +239,7 @@ public class PlaySongActivity extends AppCompatActivity {
         handler.removeCallbacks(pBar);
         seekbar.setProgress(player.getCurrentPosition());
         handler.removeCallbacks(getTime);
-        int elapsed = player.getCurrentPosition();
-        int duration = player.getDuration();
-        timeElapsed.setText(elapsed / 1000 / 60 + ":" + elapsed / 1000 % 60);
-        totalTime.setText(duration / 1000 / 60 + ":" + duration / 1000 % 60);
+        Time();
         if (player.isPlaying()) {
             player.pause();
             btnPlayPause.setBackground(play);

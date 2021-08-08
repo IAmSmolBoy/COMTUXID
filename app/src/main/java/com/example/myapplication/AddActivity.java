@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -14,12 +17,13 @@ import static com.example.myapplication.MainActivity.playlistList;
 import static com.example.myapplication.MainActivity.songCollection;
 
 
-public class AddActivity extends AppCompatActivity {
+public class AddActivity extends AppCompatActivity{
 
     public RecyclerView recycler;
     public addAdapter addAdapter;
     public ArrayList<Song> songs = new ArrayList<Song>();
     public int playlist;
+    public SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,10 +14,10 @@ public class Playlist {
         this.playlistSongs = playlistSongs;
     }
 
-    public int searchPlaylistByTitle (String title) {
-        for (int i = 0; i < playlistSongs.size(); i++) if (playlistSongs.get(i).getTitle().equals(title)) return i;
-        return -1;
-    }
+//    public int searchPlaylistByTitle (String title) {
+//        for (int i = 0; i < playlistSongs.size(); i++) if (playlistSongs.get(i).getTitle().equals(title)) return i;
+//        return -1;
+//    }
 
     public String getPlaylistTitle() {
         return title;
