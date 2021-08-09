@@ -22,6 +22,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.myapplication.MainActivity.favList;
 import static com.example.myapplication.MainActivity.playlistList;
 
 public class PlaySongActivity extends AppCompatActivity {
@@ -34,7 +36,7 @@ public class PlaySongActivity extends AppCompatActivity {
     private Boolean repeatBool = false, shuffleBool = false;
     private Drawable play, pause;
     private TextView totalTime, timeElapsed, titleView;
-    private ArrayList<Integer> shuffledOrder = new ArrayList<Integer>();
+    private ArrayList<Song> shuffledOrder = new ArrayList<>();
     private ArrayList<Song> queue = new ArrayList<Song>();
     SeekBar seekbar;
     Handler handler = new Handler();
@@ -55,6 +57,11 @@ public class PlaySongActivity extends AppCompatActivity {
         currentIndex = songData.getInt("index");
         if (currentIndex == -1) {
             queue = playlistList.get(songData.getInt("playlist")).songs();
+            currentIndex = songData.getInt("playlistIndex");
+            displaySongBasedOnSong(queue.get(currentIndex));
+        }
+        else if(currentIndex == -2) {
+            queue = favList;
             currentIndex = songData.getInt("playlistIndex");
             displaySongBasedOnSong(queue.get(currentIndex));
         }
@@ -115,6 +122,7 @@ public class PlaySongActivity extends AppCompatActivity {
             gracefullyStop();
             btnPlayPause.setBackground(pause);
             setTitle(title);
+            seekbar.setMax(player.getDuration());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,11 +131,11 @@ public class PlaySongActivity extends AppCompatActivity {
     public void playNext(View view) {
         if (shuffleBool) {
             shuffleIndex++;
-            displaySongBasedOnIndex(shuffledOrder.get(shuffleIndex));
+            displaySongBasedOnSong(shuffledOrder.get(shuffleIndex));
             playSong(fileLink);
             if (shuffleIndex >= shuffledOrder.size() - 5) {
-                int ranNum = (int) Math.round(Math.random() * songCollection.getLength() - 1);
-                shuffledOrder.add(ranNum);
+                Song song = queue.get((int) Math.round(Math.random() * (queue.size() - 1)));
+                shuffledOrder.add(song);
             }
         }
         else {
@@ -146,7 +154,7 @@ public class PlaySongActivity extends AppCompatActivity {
         else {
             if (shuffleBool) {
                 if (shuffleIndex != 0) shuffleIndex--;
-                displaySongBasedOnIndex(shuffledOrder.get(shuffleIndex));
+                displaySongBasedOnSong(shuffledOrder.get(shuffleIndex));
                 playSong(fileLink);
             }
             else {
@@ -219,17 +227,17 @@ public class PlaySongActivity extends AppCompatActivity {
         shuffleBtn.setImageDrawable(getResources().getDrawable(R.drawable.shuffle));
 //        shuffleBtn.setBackgroundResource(R.drawable.shuffle);
         shuffledOrder.clear();
-        currentIndex = songCollection.searchSongByTitle(title);
+        for (int i=0; i < queue.size(); i++) if (queue.get(i).getTitle() == title) currentIndex = i;
         shuffleIndex = 0;
 
     }
     else {
         shuffleBtn.setImageDrawable(getResources().getDrawable(R.drawable.shuffle_on));
-        shuffledOrder.add(currentIndex);
+        shuffledOrder.add(queue.get(currentIndex));
 //        shuffleBtn.setBackgroundResource(R.drawable.shuffle_on);
         for (int i = 0; i < 5; i++) {
-            int ranNum = (int) Math.round(Math.random() * (songCollection.getLength() - 1));
-            shuffledOrder.add(ranNum);
+            Song song = queue.get((int) Math.round(Math.random() * (queue.size() - 1)));
+            shuffledOrder.add(song);
         }
     }
         shuffleBool = !shuffleBool;

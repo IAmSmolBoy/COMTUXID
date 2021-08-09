@@ -49,7 +49,8 @@ public class favAdapter extends RecyclerView.Adapter<favView> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PlaySongActivity.class);
-                intent.putExtra("index", position);
+                intent.putExtra("index", -2);
+                intent.putExtra("playlistIndex", position);
                 context.startActivity(intent);
             }
         });

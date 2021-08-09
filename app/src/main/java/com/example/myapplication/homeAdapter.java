@@ -77,7 +77,13 @@ public class homeAdapter extends RecyclerView.Adapter<favView> {
                 if (v.getContentDescription().equals("On")) {
                     btn.setImageDrawable(favourites);
                     v.setContentDescription("Off");
-                    favList.remove(songCollection.getCurrentSong(songCollection.searchSongById((String) v.getTag())));
+                    int favPos = -1;
+                    for (int i = 0; i < favList.size(); i++) {
+                        if (favList.get(i).getTitle().equals(songCollection.getSongs()[position].getTitle())) favPos = i;
+                        Log.d("msg", favList.get(i).getTitle() + "," + song.getTitle());
+                    }
+                    favList.remove(favPos);
+                    Log.d("msg", "" + songCollection.getCurrentSong(songCollection.searchSongById((String) v.getTag())) + "," + v.getTag());
                     String json = gson.toJson(favList);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("list", json);
